@@ -1,58 +1,44 @@
-const express = require('express');
-const app = express();
-const categoryController = require('./controllers/categoryController');
-const categoryModel = require('./models/categoryModel');
+let express = require ('express');
+let app = express();
 
-//2. Set 'public' static folder
+//Set Public Static Folder
 app.use(express.static(__dirname + '/public'));
 
-//3. Configure View Engine -> Here uses HBS
-const expressHbs = require('express-handlebars');
-const hbs = expressHbs.create({
+let expressHbs = require('express-handlebars');
+let hbs = expressHbs.create({
     extname: 'hbs',
     defaultLayout: 'layout',
-    layoutsDir: __dirname + '/views/layouts/',
+    layoutsDir: __dirname +'/views/layouts/',
     partialsDir: __dirname + '/views/partials/'
-
 });
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
 
 require('./dal/db');
 
-//app.set('views', path.join(__dirname, 'views'));
-app.engine('hbs', hbs.engine);
-app.set('view engine','hbs');
+app.use('/', require('./routes/indexRouter'));
+app.use('/category', require('./routes/productRouter'));
 
-// app.get('/', (req, res) => {
-//     res.render('index'); //Pour this 'index' hbs file into {{{body}}} in 'layout.hbs'
-// });
+app.get('/:page', (req, res) => {
+    let banners = {
+        blog:'Our Blog',
+        category: 'Shop Category',
+        cart: 'Our Cart',
+        checkout: 'Product Checkout',
+        confirmation: 'Order Confirmation',
+        contact: 'Contact Us',
+        login: 'Login / Register',
+        register: 'Register',
+        single_blog: 'Blog Details',
+        tracking_order: 'Order Tracking'
+    };
 
-const myRouter = require('./routes/route');
-const categoryRouter = require('./routes/categoryRoute');
-const detailRouter = require('./routes/detailRoute');
-
-app.use('/', categoryRouter);
-app.use('/category', categoryRouter);
-app.use('/single-product', detailRouter);
-//app.use('/views/single-product', detailRouter);
+    let page = req.params.page;
+    res.render(page, {banner: banners[page]});
+});
 
 
-
-//module.exports = app;
-
-//1. Create Server and start
 app.set('port', process.env.PORT || 5000);
-app.listen(app.get('port'), () => {
-    console.log(`Sever is running at port ${app.get('port')}`);
-}
-);
-
-// error handler
-app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-  
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-  });
+app. listen(app.get('port'), () => {
+    console.log(`Server is running at port ${app.get('port')}`);
+});

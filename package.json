@@ -1,18 +1,25 @@
 {
-  "name": "18120385",
+  "name": "demoarona",
   "version": "1.0.0",
-  "description": "Project 18.11",
+  "description": "Project PTUDW",
   "main": "index.js",
   "scripts": {
+    "start": "node index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Hoang Bui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MinhHieu2312/DemoArona.git"
+  },
+  "author": "Nguyen Minh Hieu",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MinhHieu2312/DemoArona/issues"
+  },
+  "homepage": "https://github.com/MinhHieu2312/DemoArona#readme",
   "dependencies": {
     "express": "^4.17.1",
     "express-handlebars": "^5.2.0",
-    "handlebars": "^4.7.6",
-    "mongoose": "^5.11.0",
-    "nodemon": "^2.0.6"
+    "mongoose": "^5.11.2"
   }
 }
