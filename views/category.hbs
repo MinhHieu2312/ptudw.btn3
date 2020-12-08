@@ -11,13 +11,12 @@
               <li class="common-filter">
                 <form action="#">
                   <ul>
-                    <li class="filter-list"><input class="pixel-radio" type="radio" id="men" name="brand"><label for="men">Men<span> (3600)</span></label></li>
-                    <li class="filter-list"><input class="pixel-radio" type="radio" id="women" name="brand"><label for="women">Women<span> (3600)</span></label></li>
-                    <li class="filter-list"><input class="pixel-radio" type="radio" id="accessories" name="brand"><label for="accessories">Accessories<span> (3600)</span></label></li>
-                    <li class="filter-list"><input class="pixel-radio" type="radio" id="footwear" name="brand"><label for="footwear">Footwear<span> (3600)</span></label></li>
-                    <li class="filter-list"><input class="pixel-radio" type="radio" id="bayItem" name="brand"><label for="bayItem">Bay item<span> (3600)</span></label></li>
-                    <li class="filter-list"><input class="pixel-radio" type="radio" id="electronics" name="brand"><label for="electronics">Electronics<span> (3600)</span></label></li>
-                    <li class="filter-list"><input class="pixel-radio" type="radio" id="food" name="brand"><label for="food">Food<span> (3600)</span></label></li>
+                    {{#each categories}}
+                        {{!-- <li class="filter-list"><input class="pixel-radio" type="radio" id="{{name}}" name="brand"><label for="{{name}}">{{name}}<span></span></label></li> --}}
+                        <li class="filter-list">
+                          <a href = "/{{_id}}">{{name}}</a>
+                        </li>
+                    {{/each}}
                   </ul>
                 </form>
               </li>
@@ -86,9 +85,9 @@
             </div>
             <div>
               <div class="input-group filter-bar-search">
-                <input type="text" placeholder="Search">
+                <input id="txtKey" type="text" placeholder="Search">
                 <div class="input-group-append">
-                  <button type="button"><i class="ti-search"></i></button>
+                  <button type="button"><i class="ti-search btnSearch" id="btnSearch" onclick="onClickSearch()"></i></button>
                 </div>
               </div>
             </div>
@@ -111,7 +110,7 @@
                   <div class="card-body">
                     <p>{{type}}</p>
                     <h4 class="card-product__title"><a href="/category/{{_id}}">{{name}}</a></h4>
-                    <p class="card-product__price">{{price}}</p>
+                    <p class="card-product__price"><sapn>$</sapn>{{price}}</p>
                   </div>
                 </div>
               </div>
@@ -257,11 +256,32 @@
             <div style="position: absolute; left: -5000px;">
               <input name="b_36c4fd991d266f23781ded980_aefe40901a" tabindex="-1" value="" type="text">
             </div>
-
           </form>
         </div>
-        
       </div>
     </div>
   </section>
-	<!-- ================ Subscribe section end ================= -->		  
+	<!-- ================ Subscribe section end ================= -->	
+
+
+  <script>
+    var urlParams = new URLSearchParams(window.location.search);
+    var txtKey = document.getElementById(search);
+
+    {{#if this.products}}
+        txtKey.value = {{name}}
+    {{/if}};
+
+    txtKey.addEventListener('keyup', ()=> {
+            if (event.keyCode === 13) {
+                document.getElementById("btnSearch").click();
+            }
+        })
+
+    onClickSearch = () => {
+            urlParams.delete('page');
+            urlParams.set('key', txtKey.value);
+            window.location = `/category?${urlParams}`;
+        }
+
+  </script>
