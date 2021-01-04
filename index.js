@@ -4,6 +4,7 @@ let app = express();
 //Set Public Static Folder
 app.use(express.static(__dirname + '/public'));
 
+//Using HANDLEBAR component
 let expressHbs = require('express-handlebars');
 let hbs = expressHbs.create({
     extname: 'hbs',
@@ -14,8 +15,10 @@ let hbs = expressHbs.create({
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 
-require('./dal/db');
+//Include database into the project
+const db = require('./dal/db_NoAsync');
 
+//Routing
 app.use('/', require('./routes/indexRouter'));
 app.use('/category', require('./routes/productRouter'));
 
@@ -38,7 +41,7 @@ app.get('/:page', (req, res) => {
 });
 
 
-
+//Initialize the server part
 app.set('port', process.env.PORT || 5000);
 app. listen(app.get('port'), () => {
     console.log(`Server is running at port ${app.get('port')}`);

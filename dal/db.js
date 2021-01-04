@@ -17,6 +17,7 @@ console.log('RUNNING DB...');
 
 connectDb();
 
+//Set a name for the db()
 const db = () => database;
 
 module.exports.db = db;
