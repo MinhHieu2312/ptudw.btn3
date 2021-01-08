@@ -1,49 +1,52 @@
+const categoryModel = require('../models/categoryModel');
 const productModel = require('../models/productModel');
+const commentModel = require('../models/commentModel');
 
 exports.index = async(req, res, next) => {
-    const products = await productModel.list();
-    console.log('products', products);
-    const key = req.query.key;
+    const categories = await categoryModel.list();
+    const products = await productModel.listlimit(8);
 
-            const query = {}; 
-            
-            if(key) {
-                query.name = new RegExp(key,'i');
-            }
-
-    res.render('', {products, key});
-};
-
-exports.category = async(req, res, next) => {
-    const products = await productModel.list();
-    const categories = await productModel.catelist();
-
-    res.render('category', {
-        products,
+    res.render('index', {
         categories,
-        banner: 'Shop Category'
+        products
     });
 };
 
-exports.details = async(req, res, next) => {
-    const product = await productModel.get(req.params._id);
+exports.category = async (req, res, next) => {
+    const products = await productModel.listlimit(6);
+    const topproducts1 = await productModel.listlimit(4);
+    const categories = await categoryModel.list();
+    
+    res.render('category', {
+        products,
+        topproducts1,
+        categories,
+        banner: 'Book Category'
+    });
+};
+
+exports.categorybyid = async (req, res, next) => {
+    const products = await productModel.listbyidcate(req.params.categoryID)
+    const topproducts1 = await productModel.listbyidcatelimit(req.params.categoryID,4);
+    const categories = await categoryModel.list();
+    
+    res.render('category', {
+        products,
+        topproducts1,
+        categories,
+        banner: 'Book Category'
+    });
+};
+
+exports.detailproduct = async(req, res, next) => {
+    const product = await productModel.get(req.params.productID);
+    const detailcategory = await categoryModel.getbyid(req.params.categoryID);
+    const comments = await commentModel.listbyid(req.params.productID);
+
     res.render('single_product', {
         product,
-        banner: 'Shop Single'
-    });
-}
-
-exports.categorydetail= async(req, res, next) => {
-    const products = await productModel.listcate(req.params._id);
-    const cate = await productModel.get1(req.params._id);
-    const categories = await productModel.catelist();
-
-    let banner1 = cate.name;
-
-    res.render('category', {
-        products,
-        categories,
-        banner: 'Shop Category',
-        banner1
+        detailcategory,
+        comments,
+        banner: 'Book Detail'
     });
 }

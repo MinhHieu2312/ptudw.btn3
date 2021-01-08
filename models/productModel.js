@@ -2,9 +2,33 @@ const {db} = require('../dal/db');
 const {ObjectId} = require('mongodb');
 
 exports.list = async () => {
-    const productcollection = db().collection('products');
-    const category = await productcollection.find({}).toArray();
-    return category;
+    const productcollection = db().collection('products').aggregate([
+        {
+            $lookup:{
+                from: 'categories',
+                localField: 'categoryID',
+                foreignField: '_id',
+                as: 'categorydetails'
+            }
+        }
+    ]);
+    const products = await productcollection.toArray();
+    return products;
+}
+
+exports.listlimit = async (limit) => {
+    const productcollection = db().collection('products').aggregate([
+        {
+            $lookup:{
+                from: 'categories',
+                localField: 'categoryID',
+                foreignField: '_id',
+                as: 'categorydetails'
+            }
+        }
+    ]).limit(limit);
+    const products = await productcollection.toArray();
+    return products;
 }
 
 exports.get = async(id) => {
@@ -13,21 +37,14 @@ exports.get = async(id) => {
     return detail;
 }
 
-exports.get1 = async(id) => {
-    const productcollection = db().collection('categories');
-    const detail = await productcollection.findOne({_id: ObjectId(id)});
-    return detail;
-}
-
-exports.catelist = async() => {
-    const catego = db().collection('categories');
-    const typecategory = await catego.find({}).toArray();
-    return typecategory;
-}
-
-exports.listcate = async (id) => {
+exports.listbyidcate = async (cateid) => {
     const productcollection = db().collection('products');
-    const category = await productcollection.find({categoryID: ObjectId(id)}).toArray();
-    console.log('category', category);
-    return category;
+    const products = await productcollection.find({"categoryID": ObjectId(cateid)}).toArray();
+    return products;
+}
+
+exports.listbyidcatelimit = async (cateid, limit) => {
+    const productcollection = db().collection('products');
+    const products = await productcollection.find({"categoryID": ObjectId(cateid)}).limit(limit).toArray();
+    return products;
 }

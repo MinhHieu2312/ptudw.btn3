@@ -16,11 +16,10 @@ app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 
 //Include database into the project
-const db = require('./dal/db_NoAsync');
+const db = require('./dal/db');
 
 //Routing
-app.use('/', require('./routes/indexRouter'));
-app.use('/category', require('./routes/productRouter'));
+app.use(require('./routes/productRouter'));
 
 app.get('/:page', (req, res) => {
     let banners = {
@@ -35,7 +34,6 @@ app.get('/:page', (req, res) => {
         single_blog: 'Blog Details',
         tracking_order: 'Order Tracking'
     };
-
     let page = req.params.page;
     res.render(page, {banner: banners[page]});
 });

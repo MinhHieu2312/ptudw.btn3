@@ -7,7 +7,7 @@
 				<div class="col-lg-6">
 					<divs class="owl-carousel owl-theme s_Product_carousel">
 						<div class="single-prd-item">
-							<img class="img-fluid" src={{product.img}} alt="">
+							<img class="img-fluid" src={{product.img.0.url}} alt="">
 						</div>
 						<div class="single-prd-item">
 							<img class="img-fluid" src="img/category/s-p1.jpg" alt="">
@@ -23,10 +23,14 @@
 							<h3>{{name}}</h3>
 							<h2><span>$</span>{{price}}</h2>
 							<ul class="list">
-								<li><a class="active" href="#"><span>Category : </span>{{type}}</a></li>
+					{{/with}}
+								{{#with detailcategory}}
+								<li><a class="active" href="#"><span>Category : </span>{{name}}</a></li>
+								{{/with}}
+					{{#with product}}
 								<li><a href="#"><span>Author : </span> {{author}}</a></li>
 							</ul>
-							<p>{{description}}</p>
+							<p>{{overview}}</p>
 							<div class="product_count">
 								<label for="qty">Quantity:</label>
 								<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
@@ -41,7 +45,7 @@
 								<a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
 							</div>
 						</div>
-					{{/with}}
+					{{/with}}	
 				</div>
 			</div>
 		</div>
@@ -70,22 +74,10 @@
 			</ul>
 			<div class="tab-content" id="myTabContent">
 				<div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-					<p>Beryl Cook is one of Britain’s most talented and amusing artists .Beryl’s pictures feature women of all shapes
-						and sizes enjoying themselves .Born between the two world wars, Beryl Cook eventually left Kendrick School in
-						Reading at the age of 15, where she went to secretarial school and then into an insurance office. After moving to
-						London and then Hampton, she eventually married her next door neighbour from Reading, John Cook. He was an
-						officer in the Merchant Navy and after he left the sea in 1956, they bought a pub for a year before John took a
-						job in Southern Rhodesia with a motor company. Beryl bought their young son a box of watercolours, and when
-						showing him how to use it, she decided that she herself quite enjoyed painting. John subsequently bought her a
-						child’s painting set for her birthday and it was with this that she produced her first significant work, a
-						half-length portrait of a dark-skinned lady with a vacant expression and large drooping breasts. It was aptly
-						named ‘Hangover’ by Beryl’s husband and</p>
-					<p>It is often frustrating to attempt to plan meals that are designed for one. Despite this fact, we are seeing
-						more and more recipe books and Internet websites that are dedicated to the act of cooking for one. Divorce and
-						the death of spouses or grown children leaving for college are all reasons that someone accustomed to cooking for
-						more than one would suddenly need to learn how to adjust all the cooking practices utilized before into a
-						streamlined plan of cooking that is more efficient for one person creating less</p>
-				</div>
+					{{#with product}}
+					<p>{{description}}</p>
+					{{/with}}
+				</div>				
 				<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 					<div class="table-responsive">
 						<table class="table">
@@ -158,26 +150,26 @@
 						</table>
 					</div>
 				</div>
+
 				<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
 					<div class="row">
 						<div class="col-lg-6">
+							{{#each this.comments}}
 							<div class="comment_list">
 								<div class="review_item">
 									<div class="media">
 										<div class="d-flex">
-											<img src="img/product/review-1.png" alt="">
+											<img src={{avt_img}} alt="">
 										</div>
 										<div class="media-body">
-											<h4>Blake Ruiz</h4>
-											<h5>12th Feb, 2018 at 05:56 pm</h5>
-											<a class="reply_btn" href="#">Reply</a>
+											<h4>{{name}}</h4>
+											<h5>{{date}}</h5>
+											<a class="reply_btn" href="#">Phản hồi</a>
 										</div>
 									</div>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-										commodo</p>
+									<p>{{text}}</p>
 								</div>
-								<div class="review_item reply">
+								{{!-- <div class="review_item reply">
 									<div class="media">
 										<div class="d-flex">
 											<img src="img/product/review-2.png" alt="">
@@ -191,23 +183,9 @@
 									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
 										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 										commodo</p>
-								</div>
-								<div class="review_item">
-									<div class="media">
-										<div class="d-flex">
-											<img src="img/product/review-3.png" alt="">
-										</div>
-										<div class="media-body">
-											<h4>Blake Ruiz</h4>
-											<h5>12th Feb, 2018 at 05:56 pm</h5>
-											<a class="reply_btn" href="#">Reply</a>
-										</div>
-									</div>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-										commodo</p>
-								</div>
+								</div> --}}
 							</div>
+							{{/each}}
 						</div>
 						<div class="col-lg-6">
 							<div class="review_box">
@@ -238,9 +216,10 @@
 									</div>
 								</form>
 							</div>
-						</div>
-					</div>
+						</div>					
+					</div>					
 				</div>
+
 				<div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
 					<div class="row">
 						<div class="col-lg-6">
