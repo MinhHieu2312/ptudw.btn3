@@ -1,23 +1,18 @@
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
+const uri = 'mongodb+srv://sbookshop:ptudw123@cluster0.em6hz.mongodb.net/sbookshop';
 
-const uri = 'mongodb+srv://sbookshop:ptudw123@cluster0.em6hz.mongodb.net/test';
-
-const client = new MongoClient(uri, { useUnifiedTopology: true });
-
-let database;
-
-async function connectDb(){
-    await client.connect();
-    
-    database = await client.db('sbookshop');
-    console.log('Db connected!');
+async function connect() {
+    try {
+        await mongoose.connect(uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false,
+            useCreateIndex: true,
+        });
+        console.log('Connect successful!');
+    } catch (error) {
+        console.log('Connect fail!');
+    }
 }
 
-console.log('RUNNING DB...');
-
-connectDb();
-
-//Set a name for the db()
-const db = () => database;
-
-module.exports.db = db;
+module.exports = { connect };

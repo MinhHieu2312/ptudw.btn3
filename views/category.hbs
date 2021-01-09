@@ -6,13 +6,15 @@
       <div class="row">
         <div class="col-xl-3 col-lg-4 col-md-5">
           <div class="sidebar-categories">
-            <div class="head">Browse Categories</div>
+            <div class="head">Thể Loại</div>
             <ul class="main-categories">
               <li class="common-filter">
                 <form action="#">
                   <ul>
                     {{#each this.categories}}
-                    <li class="filter-list"><input class="pixel-radio" type="radio" id="men" name="brand"><label for="men">{{name}}<span> ({{numOfBook}})</span></label></li>
+                    <li class="filter-list">
+                      <a href="/category/{{_id}}"> {{name}}<span> ({{numOfBook}})</span></a>
+                    </li>
                     {{/each}}
                   </ul>
                 </form>
@@ -20,30 +22,27 @@
             </ul>
           </div>
           <div class="sidebar-filter">
-            <div class="top-filter-head">Product Filters</div>
+            <div class="top-filter-head">Chọn Lựa</div>
             <div class="common-filter">
-              <div class="head">Brands</div>
-              <form action="#">
+              <div class="head">Tác Giả</div>
+              <form action="#" id="myform">
                 <ul>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="apple" name="brand"><label for="apple">Apple<span>(29)</span></label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="asus" name="brand"><label for="asus">Asus<span>(29)</span></label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="gionee" name="brand"><label for="gionee">Gionee<span>(19)</span></label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="micromax" name="brand"><label for="micromax">Micromax<span>(19)</span></label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="samsung" name="brand"><label for="samsung">Samsung<span>(19)</span></label></li>
+                  <li class="filter-list"><input class="reset" type="radio" value="Tất cả"><label for="author" onclick="selectParam1()" >&nbsp;&nbsp;&nbsp;&nbsp;Tất cả<span></span></label></li>
+                  {{#each this.allproducts}}
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="author{{auslug}}" name="author" value="{{auslug}}"><label for="author{{auslug}}" onclick="selectParam('author', '{{auslug}}')" >{{author}}<span> (1)</span></label></li>
+                  {{/each}}
                 </ul>
               </form>
             </div>
             <div class="common-filter">
-              <div class="head">Color</div>
-              <form action="#">
+              <div class="head">Giá Cả</div>
+              <form action="#" id="myform1">
                 <ul>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="black" name="color"><label for="black">Black<span>(29)</span></label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="balckleather" name="color"><label for="balckleather">Black
-                      Leather<span>(29)</span></label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="blackred" name="color"><label for="blackred">Black
-                      with red<span>(19)</span></label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="gold" name="color"><label for="gold">Gold<span>(19)</span></label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="spacegrey" name="color"><label for="spacegrey">Spacegrey<span>(19)</span></label></li>
+                  {{!-- <li class="filter-list"><input class="reset" type="radio" value="99"><label for="author" onclick="selectParam2()" >&nbsp;&nbsp;&nbsp;&nbsp;Tất cả<span></span></label></li> --}}
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="t1" name="price" value="10"><label for="t1" onclick="selectParam('price', 10)">$0 -> $10</label></li>
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="t2" name="price" value="20"><label for="t2" onclick="selectParam('price', 20)">$10 -> $20</label></li>
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="t3" name="price" value="30"><label for="t3" onclick="selectParam('price', 30)">$20 -> </label></li>
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="t4" name="price" value="99"><label for="t4" onclick="selectParam('price', 99)">Tất cả </label></li>
                 </ul>
               </form>
             </div>
@@ -67,17 +66,24 @@
           <!-- Start Filter Bar -->
           <div class="filter-bar d-flex flex-wrap align-items-center">
             <div class="sorting">
-              <select>
-                <option value="1">Default sorting</option>
-                <option value="1">Default sorting</option>
-                <option value="1">Default sorting</option>
+              <select name="orderby" onchange="this.form.submit()">
+                <option value="" selected disabled hidden><%= sort_value %></option>
+                <option value="1">Giá thấp đến cao</option>
+                <option value="-1">Giá cao đến thấp</option>
               </select>
             </div>
-            <div class="sorting mr-auto">
-              <select>
-                <option value="1">Show 12</option>
-                <option value="1">Show 12</option>
-                <option value="1">Show 12</option>
+            <div class="sorting mr-auto" >
+              <select name="numItems" onchange="this.form.submit()">
+                <% if(ITEM_PER_PAGE != 1000){%>								
+								<option value="" selected disabled hidden><%= ITEM_PER_PAGE%></option>
+								<% }else{%>
+									<option value="" selected disabled hidden>Tất cả</option>
+								<% } %>
+
+                <option value="3">Show 3</option>
+                <option value="6">Show 6</option>
+                <option value="9">Show 9</option>
+                <option value="1000">Show All</option>
               </select>
             </div>
             <div>
@@ -105,7 +111,7 @@
                     </ul>
                   </div>
                   <div class="card-body">
-                    <p>{{categorydetails.0.name}}</p>
+                    <p>{{this.category.name}}</p>
                     <h4 class="card-product__title"><a href="/category/{{categoryID}}/{{_id}}">{{name}}</a></h4>
                     <p class="card-product__price"><sapn>$</sapn>{{price}}</p>
                   </div>
@@ -146,6 +152,25 @@
 		</div>
 	</section>
 	<!-- ================ top product area end ================= -->		
+
+<script>
+    function selectParam(key, value){
+      let url = `/category?${key}=${value}`;
+      location.href=url;
+    }
+
+    function selectParam1(){
+      $("#myform")[0].reset();
+      let url = `/category`;
+      location.href=url;
+    }
+
+    function selectParam2(){
+      $("#myform1")[0].reset();
+      let url = `/category`;
+      location.href=url;
+    }
+</script>
 
 
 

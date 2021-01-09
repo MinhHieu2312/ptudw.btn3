@@ -17,7 +17,7 @@ app.set('view engine', 'hbs');
 
 //Include database into the project
 const db = require('./dal/db');
-
+db.connect();
 //Routing
 app.use(require('./routes/productRouter'));
 
@@ -31,15 +31,12 @@ app.get('/:page', (req, res) => {
         contact: 'Contact Us',
         login: 'Login / Register',
         register: 'Register',
-        single_blog: 'Blog Details',
         tracking_order: 'Order Tracking'
     };
     let page = req.params.page;
     res.render(page, {banner: banners[page]});
 });
 
-
-//Initialize the server part
 app.set('port', process.env.PORT || 5000);
 app. listen(app.get('port'), () => {
     console.log(`Server is running at port ${app.get('port')}`);
