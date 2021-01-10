@@ -27,9 +27,9 @@
               <div class="head">Tác Giả</div>
               <form action="#" id="myform">
                 <ul>
-                  <li class="filter-list"><input class="reset" type="radio" value="Tất cả"><label for="author" onclick="selectParam1()" >&nbsp;&nbsp;&nbsp;&nbsp;Tất cả<span></span></label></li>
-                  {{#each this.allproducts}}
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="author{{auslug}}" name="author" value="{{auslug}}"><label for="author{{auslug}}" onclick="selectParam('author', '{{auslug}}')" >{{author}}<span> (1)</span></label></li>
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="author" name="author"><label for="author" onclick="selectParam('author', '')" >Tất cả<span></span></label></li>
+                  {{#each this.products}}
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="author{{auslug}}" name="author"><label for="author{{auslug}}" onclick="selectParam('author', '{{auslug}}')" >{{author}}<span> (1)</span></label></li>
                   {{/each}}
                 </ul>
               </form>
@@ -38,15 +38,14 @@
               <div class="head">Giá Cả</div>
               <form action="#" id="myform1">
                 <ul>
-                  {{!-- <li class="filter-list"><input class="reset" type="radio" value="99"><label for="author" onclick="selectParam2()" >&nbsp;&nbsp;&nbsp;&nbsp;Tất cả<span></span></label></li> --}}
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="t1" name="price" value="10"><label for="t1" onclick="selectParam('price', 10)">$0 -> $10</label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="t2" name="price" value="20"><label for="t2" onclick="selectParam('price', 20)">$10 -> $20</label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="t3" name="price" value="30"><label for="t3" onclick="selectParam('price', 30)">$20 -> </label></li>
-                  <li class="filter-list"><input class="pixel-radio" type="radio" id="t4" name="price" value="99"><label for="t4" onclick="selectParam('price', 99)">Tất cả </label></li>
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="price10" name="price" ><label for="price10" onclick="selectParam('price', 10)">$0 -> $10</label></li>
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="price20" name="price" ><label for="price20" onclick="selectParam('price', 20)">$10 -> $20</label></li>
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="price30" name="price" ><label for="price30" onclick="selectParam('price', 30)">$20 -> </label></li>
+                  <li class="filter-list"><input class="pixel-radio" type="radio" id="price99" name="price" ><label for="price99" onclick="selectParam('price', 99)">Tất cả </label></li>
                 </ul>
               </form>
             </div>
-            <div class="common-filter">
+            {{!-- <div class="common-filter">
               <div class="head">Price</div>
               <div class="price-range-area">
                 <div id="price-range"></div>
@@ -59,40 +58,39 @@
                   <div id="upper-value"></div>
                 </div>
               </div>
-            </div>
+            </div> --}}
           </div>
         </div>
         <div class="col-xl-9 col-lg-8 col-md-7">
           <!-- Start Filter Bar -->
           <div class="filter-bar d-flex flex-wrap align-items-center">
             <div class="sorting">
-              <select name="orderby" onchange="this.form.submit()">
-                <option value="" selected disabled hidden><%= sort_value %></option>
+              <form method="GET">
+                <select id="orderby" name="orderby" onchange="selectParam('orderby', this.value)">
                 <option value="1">Giá thấp đến cao</option>
                 <option value="-1">Giá cao đến thấp</option>
               </select>
+              </form>
             </div>
             <div class="sorting mr-auto" >
-              <select name="numItems" onchange="this.form.submit()">
-                <% if(ITEM_PER_PAGE != 1000){%>								
-								<option value="" selected disabled hidden><%= ITEM_PER_PAGE%></option>
-								<% }else{%>
-									<option value="" selected disabled hidden>Tất cả</option>
-								<% } %>
-
-                <option value="3">Show 3</option>
-                <option value="6">Show 6</option>
-                <option value="9">Show 9</option>
-                <option value="1000">Show All</option>
-              </select>
+              <form method="GET">
+                <select id="numItems" name="numItems" onchange="selectParam('numItems', this.value)">
+                  <option value="1000">Show All</option>
+                  <option value="3">Show 3</option>
+                  <option value="6">Show 6</option>
+                  <option value="9">Show 9</option>               
+                </select>  
+              </form>  
             </div>
             <div>
-              <div class="input-group filter-bar-search">
-                <input id="txtKey" type="text" placeholder="Search">
-                <div class="input-group-append">
-                  <button type="button"><i class="ti-search btnSearch" id="btnSearch" onclick="onClickSearch()"></i></button>
+              <form method="GET", action="/category">
+                <div class="input-group filter-bar-search">
+                  <input type="text" name="search" placeholder="Tìm kiếm">
+                  <div class="input-group-append">
+                    <button type="button"><i class="ti-search" ></i></button>
+                  </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
           <!-- End Filter Bar -->
@@ -111,7 +109,7 @@
                     </ul>
                   </div>
                   <div class="card-body">
-                    <p>{{this.category.name}}</p>
+                    <p>{{author}}</p>
                     <h4 class="card-product__title"><a href="/category/{{categoryID}}/{{_id}}">{{name}}</a></h4>
                     <p class="card-product__price"><sapn>$</sapn>{{price}}</p>
                   </div>
@@ -154,44 +152,34 @@
 	<!-- ================ top product area end ================= -->		
 
 <script>
-    function selectParam(key, value){
-      let url = `/category?${key}=${value}`;
-      location.href=url;
+    let urlParams = new URLSearchParams(location.search);
+    let params = {
+        author: "",
+        price: "99",
+        orderby: "1",
+        numItems: "1000",
+        search: ""
+    };
+
+    let checkboxes = ['author', 'price'];
+    for (let key in params){
+      let control = $(`#${key}${urlParams.get(key)}`);
+      if (control){
+        $(control).prop('checked', true);
+      }
     }
 
-    function selectParam1(){
-      $("#myform")[0].reset();
-      let url = `/category`;
-      location.href=url;
+    $('#orderby').val(urlParams.get('orderby'));
+    $('#numItems').val(urlParams.get('numItems'));
+
+    for (let key in params){
+      if(!urlParams.has(key)){urlParams.append(key,params[key]);}
     }
 
-    function selectParam2(){
-      $("#myform1")[0].reset();
-      let url = `/category`;
+    function selectParam(key, value, reset = false){
+      urlParams.set(key,value);
+      let url = `/category?${urlParams.toString()}`;
       location.href=url;
     }
+    
 </script>
-
-
-
-  {{!-- <script>
-    var urlParams = new URLSearchParams(window.location.search);
-    var txtKey = document.getElementById(search);
-
-    {{#if this.products}}
-        txtKey.value = {{name}}
-    {{/if}};
-
-    txtKey.addEventListener('keyup', ()=> {
-            if (event.keyCode === 13) {
-                document.getElementById("btnSearch").click();
-            }
-        })
-
-    onClickSearch = () => {
-            urlParams.delete('page');
-            urlParams.set('key', txtKey.value);
-            window.location = `/category?${urlParams}`;
-        }
-
-  </script> --}}

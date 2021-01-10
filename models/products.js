@@ -7,7 +7,6 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const Product = new Schema({
-    type: String,
     name: String,
     price: Number,
     img: [Object],
@@ -20,6 +19,16 @@ const Product = new Schema({
     slug: { type: String, slug: ['name', 'author'], unique: true },
     categoryID: ObjectId,
 }, { timestamps: true });
+
+const index = {
+    name: "text",
+    slug: "text",
+    auslug: "text",
+    author: "text",
+    overview: "text",
+    description: "text"
+};
+Product.index(index);
 
 Product.plugin(mongoosePaginate);
 
