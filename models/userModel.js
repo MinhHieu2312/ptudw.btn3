@@ -46,3 +46,7 @@ exports.checkCredential = async (username, password) =>{
 exports.getUserById = (id) => {
     return userMongooseModel.findOne({_id: id});
 }
+
+exports.getUserByUsername = (username) => {
+    return userMongooseModel.findOne({username: username});
+}

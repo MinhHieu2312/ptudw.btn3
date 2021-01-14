@@ -10,6 +10,21 @@ exports.CreateUser = async function(req, res){
         password
     };
 
+
+    const user = await userModel.getUserByUsername(username);   //Get user by username
+    if(user)
+        return res.render('register', {
+            message: username + " is already existed"
+            });
+    
+
+    if(!isConfirmPassWord(password, confirmPassword))
+    {
+        return res.render('register', {
+            message: "Confirm password is wrong"
+        });
+    }
+
     console.log('userController checked');
 
     try{
@@ -19,7 +34,7 @@ exports.CreateUser = async function(req, res){
 
     }
     catch (err) {
-        res.render('users/register', {
+        res.render('register', {
             title: "Register",
             err: "You can't create an account right now. Try again later"
         });
@@ -30,6 +45,11 @@ exports.CreateUser = async function(req, res){
     
 }
 
-
+function isConfirmPassWord(pass, cpass)
+{
+    if(pass === cpass)
+        return true;
+    return false;
+}
 
 

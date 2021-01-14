@@ -124,10 +124,14 @@ app.use('/users', require('./routes/userRouter'));
 
 app.post('/users/login', function(req, res, next){
   passport.authenticate('local', function(err, user, info) {
-    if (err) { return next(err); }
-    if (!user) { return res.redirect('/users/login'); }
+    if (err) { 
+      return next(err); }
+    if (!user) { 
+      return res.render('login', {message : 'Incorrect username or password.'});
+    }
     req.logIn(user, function(err) {
-      if (err) { return next(err); }
+      if (err) {
+        return next(err); }
 
       console.log('Login Function');
       res.locals.user = user;

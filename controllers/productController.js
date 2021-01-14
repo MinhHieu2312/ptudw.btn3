@@ -34,7 +34,7 @@ exports.index = async(req, res, next) => {
 
         const categories = await categoryModel.list();
         const products = await productModel.listlimitindex(8);
-        console.log(req.user);
+
         res.render('index', {
             categories,
             products
