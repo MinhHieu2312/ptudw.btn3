@@ -97,9 +97,7 @@ app.use((req, res, next) => {
 
   //2. (I will move all of this to passport.js later on)
   passport.serializeUser(function(user, done) {
-
       console.log('Serialize');
-      console.log(user);
     done(null, user._id);
   });
 
@@ -130,14 +128,12 @@ app.post('/users/login', function(req, res, next){
     if (!user) { return res.redirect('/users/login'); }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
+
       console.log('Login Function');
-      console.log(user);
-
       res.locals.user = user;
+      res.locals.username = user.username;
 
-      res.locals.isLoggedIn = true;
-      console.log("isLoggedIn set to true");
-      return res.redirect('/');
+      return res.render('index');
     });
   })(req, res, next);
 });
@@ -146,7 +142,7 @@ const userController = require('./controllers/userController');
 app.post('/users/register', userController.CreateUser);
 
 //logout using passport function
-app.get('users/logout', function(req, res){
+app.get('/users/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });

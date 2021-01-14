@@ -4,13 +4,8 @@ const router = express.Router();
 
 
 //4. Define routes here
-// router.get('/:page', (req, res, next) => {
-//     const page = req.params.page;
-//     res.render(page);
-// });
 
 router.get('/', (req, res) => {
-    console.log(req.user);
     res.render('index'); //Pour this 'index' hbs file into {{{body}}} in 'layout.hbs'
 });
 
