@@ -24,9 +24,7 @@ app.set('view engine', 'hbs');
 const db = require('./dal/db');
 db.connect();
 
-//Routing
-//app.use('/', require('./routes/indexRouter'));
-// app.use('/category', require('./routes/productRouter'));
+
 // //Routing
 app.use('/', require('./routes/productRouter'));
 
@@ -74,10 +72,14 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use(passport.session());
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  res.locals.isLoggedIn = req.user ? true : false;
+  next();
+});
 
 
 
-//module.exports = passport;
 //1. Define the strategy
 
   passport.use(new LocalStrategy(
@@ -95,12 +97,17 @@ app.use(passport.session());
 
   //2. (I will move all of this to passport.js later on)
   passport.serializeUser(function(user, done) {
+
+      console.log('Serialize');
+      console.log(user);
     done(null, user._id);
   });
 
   //HANGING
   passport.deserializeUser(function(id, done) {
     userModel.getUserById(id).then((user) => {
+      console.log('Deserialize');
+      console.log(user);
         done(null, user);
     });
           
@@ -117,17 +124,32 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/users', require('./routes/userRouter'));
 
-const bcrypt = require('bcrypt');
-app.post('/users/login', 
+app.post('/users/login', function(req, res, next){
+  passport.authenticate('local', function(err, user, info) {
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/users/login'); }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      console.log('Login Function');
+      console.log(user);
 
-   passport.authenticate('local',  { successRedirect: '/users/register', failureRedirect: '/category'})
-  //   ,(req, res) => {
-  //     console.log("Calling Auth Method");}
-     );
+      res.locals.user = user;
 
+      res.locals.isLoggedIn = true;
+      console.log("isLoggedIn set to true");
+      return res.redirect('/');
+    });
+  })(req, res, next);
+});
 
 const userController = require('./controllers/userController');
 app.post('/users/register', userController.CreateUser);
+
+//logout using passport function
+app.get('users/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 
 

@@ -10,6 +10,7 @@ const router = express.Router();
 // });
 
 router.get('/', (req, res) => {
+    console.log(req.user);
     res.render('index'); //Pour this 'index' hbs file into {{{body}}} in 'layout.hbs'
 });
 
