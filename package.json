@@ -1,0 +1,35 @@
+{
+  "name": "demoarona",
+  "version": "1.0.0",
+  "description": "Project PTUDW",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MinhHieu2312/DemoArona.git"
+  },
+  "author": "Nguyen Minh Hieu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MinhHieu2312/DemoArona/issues"
+  },
+  "homepage": "https://github.com/MinhHieu2312/DemoArona#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.0",
+    "express-handlebars-paginate": "^1.0.3",
+    "express-session": "^1.17.1",
+    "formidable": "^1.2.2",
+    "mongoose": "^5.11.2",
+    "mongoose-paginate-v2": "^1.3.13",
+    "mongoose-slug-generator": "^1.0.4",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
+  }
+}
