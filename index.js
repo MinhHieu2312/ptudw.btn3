@@ -47,14 +47,8 @@ app.get('/:page', (req, res) => {
 });
 
 //LOGIN PART. USING 'PASSPORT' MIDDLEWARE
+const passport = require('./util/passport');
 
-//0. Initialize
-//const passport = require('./util/passport');
-const passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
-
-const userModel = require('./models/userModel');
-const userMongooseModel = require('./models/userModel_Mongoose');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 
@@ -62,96 +56,33 @@ app.use(passport.initialize());
 app.use(flash());
 
 const session = require('express-session');
-//và khai báo sử dụng:
 app.use(session({
     secret: "cats",
     cookie: {
-        maxAge: 1000 * 50 * 5 //đơn vị là milisecond
+        maxAge: 1000 * 50 * 5 
     },
     resave: true,
     saveUninitialized: true
 }));
 app.use(passport.session());
+
 app.use((req, res, next) => {
   res.locals.user = req.user;
   res.locals.isLoggedIn = req.user ? true : false;
   next();
 });
 
-
-
-//1. Define the strategy
-
-  passport.use(new LocalStrategy(
-    async function (username, password, done) {
-      console.log("Entering LocalStrategy");
-      const user = await userModel.checkCredential(username, password);
-      if (!user) {
-        console.log("Login failed");
-        return done(null, false, { message: 'Incorrect username or password. ' });
-      }
-      console.log("Login success");
-      return done(null, user);
-    }
-  ));
-
-  //2. (I will move all of this to passport.js later on)
-  passport.serializeUser(function(user, done) {
-      console.log('Serialize');
-    done(null, user._id);
-  });
-
-  //HANGING
-  passport.deserializeUser(function(id, done) {
-    userModel.getUserById(id).then((user) => {
-      console.log('Deserialize');
-      console.log(user);
-        done(null, user);
-    });
-          
-  });
-
-
-//3. Add routing /users/login
-//use this to parse req body to get information
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(bodyParser.json()); //To get username and pass for authen strategy
-app.use(bodyParser.urlencoded({extended: true}));
-
 
 app.use('/users', require('./routes/userRouter'));
-
-app.post('/users/login', function(req, res, next){
-  passport.authenticate('local', function(err, user, info) {
-    if (err) { 
-      return next(err); }
-    if (!user) { 
-      return res.render('login', {message : 'Incorrect username or password.'});
-    }
-    req.logIn(user, function(err) {
-      if (err) {
-        return next(err); }
-
-      console.log('Login Function');
-      res.locals.user = user;
-      res.locals.username = user.username;
-
-      return res.render('index');
-    });
-  })(req, res, next);
-});
+app.post('/users/login', passport.Authenticate);
 
 const userController = require('./controllers/userController');
 app.post('/users/register', userController.CreateUser);
 
-//logout using passport function
-app.get('/users/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
-
-
+//Logout using passport function
+app.get('/users/logout', passport.LogoutHandler);
 
 
 //Initialize the server part
