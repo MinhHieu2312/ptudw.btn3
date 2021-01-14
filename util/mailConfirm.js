@@ -43,10 +43,9 @@ exports.SendConfirmMail = async function(req,res){
             from: '"SBookshop 📚" <sbookshop.noreply@gmail.com>',
             to: req.body.email,
             subject: "PTUDW_K18: Please confirm your Email account",
-            text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+            text: 'You are receiving this because you (or someone else) have to activate your account.\n\n' +
             'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-            link +
-            ' If you did not request this, please ignore this email and your password will remain unchanged.\n'
+            link
         };
 
         console.log(mailOptions);

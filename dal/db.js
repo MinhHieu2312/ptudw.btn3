@@ -9,9 +9,9 @@ async function connect() {
             useFindAndModify: false,
             useCreateIndex: true,
         });
-        console.log('Connect successful!');
+        console.log('Database connect successful!');
     } catch (error) {
-        console.log('Connect fail!');
+        console.log('Database connect fail!');
     }
 }
 

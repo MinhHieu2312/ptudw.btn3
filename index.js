@@ -88,6 +88,14 @@ app.get('/users/logout', passport.LogoutHandler);
 const mailConfirm = require('./util/mailConfirm');
 app.get('/verify', mailConfirm.Verify);
 
+//Forgot password
+const forgotPassword = require('./util/forgotPassword');
+app.get('/users/forgotPassword', (req, res) => {res.render('forgotPassword')});
+app.post('/users/forgotPassword', forgotPassword.SendResetPasswordMail);
+app.get('/users/resetPassword', forgotPassword.resetPasswordView);
+app.post('/users/resetPassword', forgotPassword.resetPasswordHandler);
+
+
 //Initialize the server part
 app.set('port', process.env.PORT || 5000);
 app.listen(app.get('port'), () => {
