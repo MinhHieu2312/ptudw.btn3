@@ -39,8 +39,11 @@ passport.Authenticate = async function(req, res, next){
     if (err) { 
       return next(err); }
     if (!user) { 
-      return res.render('login', {message : 'Incorrect username or password.'});
+      return res.render('login', {message : 'Incorrect username or password'});
     }
+    if (user.status == "INACTIVE")
+      return res.render('login', {message : 'Account is not active. Please activate it'});
+    
     req.logIn(user, function(err) {
       if (err) {
         return next(err); }

@@ -28,23 +28,23 @@ db.connect();
 // //Routing
 app.use('/', require('./routes/productRouter'));
 
-app.get('/:page', (req, res) => {
-    let banners = {
-        blog:'Our Blog',
-        category: 'Shop Category',
-        cart: 'Our Cart',
-        checkout: 'Product Checkout',
-        confirmation: 'Order Confirmation',
-        contact: 'Contact Us',
-        login: 'Login / Register',
-        register: 'Register',
-        single_blog: 'Blog Details',
-        tracking_order: 'Order Tracking'
-    };
+// app.get('/:page', (req, res) => {
+//     let banners = {
+//         blog:'Our Blog',
+//         category: 'Shop Category',
+//         cart: 'Our Cart',
+//         checkout: 'Product Checkout',
+//         confirmation: 'Order Confirmation',
+//         contact: 'Contact Us',
+//         login: 'Login / Register',
+//         register: 'Register',
+//         single_blog: 'Blog Details',
+//         tracking_order: 'Order Tracking'
+//     };
 
-    let page = req.params.page;
-    res.render(page, {banner: banners[page]});
-});
+//     let page = req.params.page;
+//     res.render(page, {banner: banners[page]});
+// });
 
 //LOGIN PART. USING 'PASSPORT' MIDDLEWARE
 const passport = require('./util/passport');
@@ -84,6 +84,9 @@ app.post('/users/register', userController.CreateUser);
 //Logout using passport function
 app.get('/users/logout', passport.LogoutHandler);
 
+//Verify account
+const mailConfirm = require('./util/mailConfirm');
+app.get('/verify', mailConfirm.Verify);
 
 //Initialize the server part
 app.set('port', process.env.PORT || 5000);

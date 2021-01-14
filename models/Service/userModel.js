@@ -13,7 +13,7 @@ exports.createUser = async (newUser) => {
                 username: newUser.username,
                 email: newUser.email,
                 password: hash,     //THIS IS THE POINT OF USING BCRYPT
-                status: "ACTIVE",
+                status: "INACTIVE",
                 name: "Update Later",
                 phone: "Update Later",
                 createdAt: "2020-12-29T10:26:06.073+00:00",
