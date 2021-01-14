@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt"); //Lib for hashing password
 
-const db = require('../dal/db');
-const userMongooseModel = require('./userModel_Mongoose');
+const db = require('../../dal/db');
+const userMongooseModel = require('../users');
 
 exports.createUser = async (newUser) => {
     //Add user into database

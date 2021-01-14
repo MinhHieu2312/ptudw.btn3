@@ -1,8 +1,8 @@
 const passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
-  const userModel = require('../models/userModel');
-  const userMongooseModel = require('../models/userModel_Mongoose');
+  const userModel = require('../models/Service/userModel');
+  const userMongooseModel = require('../models/users');
 
 //1. Define the strategy
 passport.use(new LocalStrategy(

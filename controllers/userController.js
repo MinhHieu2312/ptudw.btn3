@@ -1,4 +1,4 @@
-const userModel = require('../models/userModel');
+const userModel = require('../models/Service/userModel');
 
 exports.CreateUser = async function(req, res){
     const {username, email, password} = req.body;
