@@ -1,16 +1,10 @@
-module.exports = {
-    bodyToMongoose: function(bodyObject){
-        const formData = bodyObject;
-        const detail = new Object;
-        
-        detail.isbn = bodyObject.isbn;
-        detail.publisher = bodyObject.publisher;
-        detail.publication_date = bodyObject.publication_date;
-        detail.pages = bodyObject.pages;
-        detail.sales_rank = bodyObject.sales_rank;
-        detail.product_dimensions = bodyObject.product_dimensions
+var ObjectId = require('mongoose').Types.ObjectId;
 
-        formData.detail = detail;
+module.exports = {
+    bodyToMongoose: function(bodyObject, _id){
+        const formData = bodyObject;
+        formData.productID = new ObjectId(_id);
+        formData.avt_img = "https://vsmcamp.com/wp-content/uploads/2020/11/JaZBMzV14fzRI4vBWG8jymplSUGSGgimkqtJakOV.jpeg"
         
         return formData;
     }

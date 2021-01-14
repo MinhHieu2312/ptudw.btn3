@@ -28,7 +28,7 @@
         {{#each this.categories}}
         <div class="hero-carousel__slide">
           <img src={{img}} alt="" class="img-fluid">
-          <a href="/category/{{_id}}" class="hero-carousel__slideOverlay">
+          <a href="/category?category={{_id}}" class="hero-carousel__slideOverlay">
             <h3>{{name}}</h3>
             <p>{{sum}}</p>
           </a>
@@ -50,9 +50,9 @@
           <div class="col-md-6 col-lg-4 col-xl-3">
             <div class="card text-center card-product">
               <div class="card-product__img">
-                <img class="card-img" src={{img.0.url}} alt="">
+                <img class="card-img" src={{img.1.url}} alt="">
                 <ul class="card-product__imgOverlay">
-                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button onclick="location.href='/category/{{categoryID}}/{{_id}}'"><i class="ti-search"></i></button></li>
                   <li><button><i class="ti-shopping-cart"></i></button></li>
                   <li><button><i class="ti-heart"></i></button></li>
                 </ul>

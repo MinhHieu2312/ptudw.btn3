@@ -11,10 +11,9 @@
               <li class="common-filter">
                 <form action="#">
                   <ul>
+                    <li class="filter-list"><input class="pixel-radio" type="radio" id="category" name="author"><label for="category" onclick="selectParam('category', '')" >Tất cả<span></span></label></li>
                     {{#each this.categories}}
-                    <li class="filter-list">
-                      <a href="/category/{{_id}}"> {{name}}<span> ({{numOfBook}})</span></a>
-                    </li>
+                      <li class="filter-list"><input class="pixel-radio" type="radio" id="category{{_id}}" name="category"><label for="category{{_id}}" onclick="selectParam('category', '{{_id}}')" >{{name}}<span> ({{numOfBook}})</span></label></li>
                     {{/each}}
                   </ul>
                 </form>
@@ -87,7 +86,7 @@
                 <div class="input-group filter-bar-search">
                   <input type="text" name="search" placeholder="Tìm kiếm">
                   <div class="input-group-append">
-                    <button type="button"><i class="ti-search" ></i></button>
+                    <button type="submit"><i class="ti-search" ></i></button>
                   </div>
                 </div>
               </form>
@@ -101,7 +100,7 @@
                 <div class="col-md-6 col-lg-4">
                 <div class="card text-center card-product">
                   <div class="card-product__img">
-                    <img class="card-img" src={{img.0.url}} alt="">
+                    <img class="card-img" src={{img.1.url}} alt="">
                     <ul class="card-product__imgOverlay">
                       <li><button><i class="ti-search"></i></button></li>
                       <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -116,6 +115,11 @@
                 </div>
               </div>
               {{/each}}
+            </div>
+            <div class="row justify-content-center">
+              <nav aria-label="Page navigation example" id="pagination">
+                {{{ createPagination pagination paginationClass="pagination"}}}
+              </nav>
             </div>
           </section>
           <!-- End Best Seller -->
@@ -137,7 +141,7 @@
         <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
           <div class="single-search-product-wrapper">
             <div class="single-search-product d-flex">
-              <a href="/category/{{categoryID}}/{{_id}}"><img src={{img.0.url}} alt=""></a>
+              <a href="/category/{{categoryID}}/{{_id}}"><img src={{img.1.url}} alt=""></a>
               <div class="desc">
                   <a href="/category/{{categoryID}}/{{_id}}" class="title">{{name}}</a>
                   <div class="price">${{price}}</div>
@@ -158,19 +162,34 @@
         price: "99",
         orderby: "1",
         numItems: "1000",
-        search: ""
+        search: "",
+        page: parseInt(1),
+        category: ""
     };
 
-    let checkboxes = ['author', 'price'];
-    for (let key in params){
-      let control = $(`#${key}${urlParams.get(key)}`);
-      if (control){
-        $(control).prop('checked', true);
-      }
-    }
+    
+    $(document).ready(() => {
+        let checkboxes = ['author', 'price', 'category'];
+        for (let key in params){
+          let control = $(`#${key}${urlParams.get(key)}`);
+          if (control){
+            $(control).prop('checked', true);
+          }
+        }
 
-    $('#orderby').val(urlParams.get('orderby'));
-    $('#numItems').val(urlParams.get('numItems'));
+        $('#orderby').val(urlParams.get('orderby'));
+        $('#numItems').val(urlParams.get('numItems'));
+        $('#pagination li').addClass('page-item');
+        $('#pagination li a').addClass('page-link');
+        let savePage = urlParams.get('page');
+        $('#pagination li a').each((index, item) =>{
+          let page = $(item).attr('href').split('=')[1]
+          urlParams.set('page', page);
+          let href = '/category?'+urlParams.toString();
+          $(item).attr('href', href);
+        });
+        urlParams.set('page', savePage);
+    });
 
     for (let key in params){
       if(!urlParams.has(key)){urlParams.append(key,params[key]);}

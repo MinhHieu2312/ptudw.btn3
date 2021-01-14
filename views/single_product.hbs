@@ -1,27 +1,22 @@
  {{> banner }}
  
   <!--================Single Product Area =================-->
+
 	<div class="product_image_area">
 		<div class="container">
 			<div class="row s_product_inner">
 				<div class="col-lg-6">
-					<divs class="owl-carousel owl-theme s_Product_carousel">
-						<div class="single-prd-item">
-							<img class="img-fluid" src={{product.img.0.url}} alt="">
-						</div>
-						<div class="single-prd-item">
-							<img class="img-fluid" src="img/category/s-p1.jpg" alt="">
-						</div>
-						<div class="single-prd-item">
-							<img class="img-fluid" src="img/category/s-p1.jpg" alt="">
-						</div>
-					</divs>
+					<div id="owl-demo" class="owl-carousel owl-theme">
+						<div class="item"><img src= {{product.img.1.url}} alt={{product.name}}></div>
+						<div class="item"><img src= {{product.img.0.url}} alt={{product.name}}></div>					
+					</div>
 				</div>
 				<div class="col-lg-5 offset-lg-1">
 					{{#with product}}
 						<div class="s_product_text">
 							<h3>{{name}}</h3>
 							<h2><span>$</span>{{price}}</h2>
+							<h2><span>Số lượt view : </span>{{view}}</h2>
 							<ul class="list">
 					{{/with}}
 								{{#with detailcategory}}
@@ -140,27 +135,34 @@
 				<div class="tab-pane fade show active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
 					<div class="row">
 						<div class="col-lg-6">
-							{{#each this.comments}}
+							<div>
+								{{#each this.comments}}
 								<div class="comment_list">
 									<div class="review_item">
 										<div class="media">
 											<div class="d-flex">
-												<img src={{avt_img}} alt="">
+												<img src={{avt_img}} height="60" width="60" alt="">
 											</div>
 											<div class="media-body">
 												<h4>{{name}}</h4>
-												<h5>{{date}}</h5>
+												<h5>{{date}}{{updatedAt}}</h5>
 											</div>
 										</div>
 										<p>{{text}}</p>
 									</div>
 								</div>
-							{{/each}}
+								{{/each}}
+							</div>
+							<div class="row justify-content-center">
+								<nav aria-label="Page navigation example" id="pagination">
+									{{{ createPagination pagination paginationClass="pagination"}}}
+								</nav>
+							</div>
 						</div>
 						<div class="col-lg-6">
 							<div class="review_box">
 								<h4>Post a comment</h4>
-								<form class="row contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
+								<form id="form" method="POST" action="/category/{{product.categoryID}}/{{product._id}}" class="row contact_form" novalidate="novalidate">
 									<div class="col-md-12">
 										<div class="form-group">
 											<input type="text" class="form-control" id="name" name="name" placeholder="Your Full name">
@@ -168,21 +170,11 @@
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
-											<input type="email" class="form-control" id="email" name="email" placeholder="Email Address">
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="form-group">
-											<input type="text" class="form-control" id="number" name="number" placeholder="Phone Number">
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="form-group">
-											<textarea class="form-control" name="message" id="message" rows="1" placeholder="Message"></textarea>
+											<textarea class="form-control" name="text" id="text" rows="1" placeholder="Message"></textarea>
 										</div>
 									</div>
 									<div class="col-md-12 text-right">
-										<button type="submit" value="submit" class="btn primary-btn">Submit Now</button>
+										<button type="submit" class="btn primary-btn">Submit Now</button>
 									</div>
 								</form>
 							</div>
@@ -219,3 +211,53 @@
 		</div>
 	</section>
 	<!--================ end related Product area =================-->  	
+	<script>
+    let urlParams = new URLSearchParams(location.search);
+    let params = {
+        page: 1
+    };
+
+    
+    $(document).ready(() => {
+        for (let key in params){
+          let control = $(`#${key}${urlParams.get(key)}`);
+          if (control){
+            $(control).prop('checked', true);
+          }
+        }
+
+        $('#pagination li').addClass('page-item');
+        $('#pagination li a').addClass('page-link');
+        //urlParams.set('page', savePage);
+    });
+
+    for (let key in params){
+      if(!urlParams.has(key)){urlParams.append(key,params[key]);}
+    }
+
+    function selectParam(key, value, reset = false){
+      urlParams.set(key,value);
+      let url = `/category?${urlParams.toString()}`;
+      location.href=url;
+    }
+
+	$(document).ready(function() {
+ 
+		$("#owl-demo").owlCarousel({
+		
+			navigation : true, // Show next and prev buttons
+		
+			slideSpeed : 300,
+			paginationSpeed : 400,
+		
+			items : 1, 
+			itemsDesktop : false,
+			itemsDesktopSmall : false,
+			itemsTablet: false,
+			itemsMobile : false
+		
+		});
+		
+	});
+    
+</script>

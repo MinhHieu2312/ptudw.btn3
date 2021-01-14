@@ -16,6 +16,7 @@ var ITEM_PER_PAGE = 3;
 var SORT_ITEM;
 var sort_value = "Giá thấp tới cao";
 var pauthor;
+var category;
 var pprice = '99';
 var plowerprice;
 var price;
@@ -67,13 +68,14 @@ exports.category = async (req, res, next) => {
     if (Object.entries(req.query).length == 0) {
         pauthor = "";
     }
-    var page = +req.query.page || 1;
-    let totalItems = await productModel.count(pauthor, plowerprice, pprice, searchText);
+    var page = req.query.page || 1;
+    let totalItems = await productModel.count(pauthor, plowerprice, pprice, searchText, req.query.category);
      
     const allproducts = await productModel.list();
-    const products = await productModel.listlimit(ITEM_PER_PAGE, pauthor, page, price, plowerprice, pprice, searchText);
-    const topproducts1 = await productModel.listlimitindex(4);
+    const products = await productModel.listlimit(ITEM_PER_PAGE, pauthor, page, price, plowerprice, pprice, searchText, req.query.category);
+    const topproducts1 = await productModel.listrelevant(req.params.productID);
     let categories = await categoryModel.list();
+
         res.render("category", {
             allproducts,
             topproducts1,
@@ -87,7 +89,12 @@ exports.category = async (req, res, next) => {
             lastPage: Math.ceil(totalItems / ITEM_PER_PAGE),
             ITEM_PER_PAGE: ITEM_PER_PAGE,
             sort_value: sort_value,
-            banner: "Book Category"
+            banner: "Book Category",
+            pagination: {
+                page: page,
+                limit: ITEM_PER_PAGE,
+                totalRows: totalItems
+            }
             // cartProduct: cartProduct
         });
 };
@@ -144,16 +151,37 @@ exports.categorybyid = async (req, res, next) => {
 };
 
 exports.detailproduct = async(req, res, next) => {
+    var page = req.query.page || 1;
+
     const product = await productModel.get(req.params.productID);
     const detailcategory = await categoryModel.getbyid(req.params.categoryID);
-    const comments = await commentModel.listbyid(req.params.productID);
+    const comments = await commentModel.listbyid(req.params.productID, page);
+    const countcomments = await commentModel.countlistbyid(req.params.productID);
     const topproducts1 = await productModel.listbyidcate(req.params.categoryID,4);
 
     res.render('single_product', {
+        
         product,
         detailcategory,
         comments,
         topproducts1,
-        banner: 'Book Detail'
+        banner: 'Book Detail',
+        pagination: {
+            page: page,
+            limit: 1,
+            totalRows: countcomments
+        }
+        // 
     });
+}
+
+exports.addcomment = async(req, res, next) => {
+    try {
+        const categoryID = req.params.categoryID;
+        const productID = req.params.productID;
+        await commentModel.store(req.body, req.params.categoryID);
+        // // Increase number of books of Category
+        res.redirect(`/category/${categoryID}/${productID}`);
+           
+} catch (err) { next(err) };
 }

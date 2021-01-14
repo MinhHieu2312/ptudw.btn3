@@ -14,11 +14,15 @@ let hbs = expressHbs.create({
     layoutsDir: __dirname +'/views/layouts/',
     partialsDir: __dirname + '/views/partials/',
     helpers :{
-        createPagination: helper.createPagination
+        createPagination: paginateHelper.createPagination
     }
 });
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
+
+//Middleware parse req.body
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 //Include database into the project
 const db = require('./dal/db');

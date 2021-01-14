@@ -17,6 +17,7 @@ const Product = new Schema({
     description: String,
     detail: Object, 
     slug: { type: String, slug: ['name', 'author'], unique: true },
+    view: Number,
     categoryID: ObjectId,
 }, { timestamps: true });
 
